@@ -1,4 +1,4 @@
-from Dash import Dash, html
+from dash import Dash, html
 
 def create_layout(app: Dash) -> html.div:
     return html.Div(
