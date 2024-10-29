@@ -20,6 +20,13 @@ def render(app: Dash) -> html.Div:
     fig = px.line(filtered_data, x=filtered_data.index, y=filtered_data.columns, title="CO2 emissions per capita",
                   labels={"value": "CO2 in tons", "variable": "Nations"})
     
+    # Update layout to move x-axis labels to the right
+    fig.update_layout(
+        yaxis=dict(
+            side="right"  # Move the y-axis labels to the right side as well
+        )
+    )
+
     return html.Div(dcc.Graph(figure=fig), id=ids.LINE_CHART)
 
     
