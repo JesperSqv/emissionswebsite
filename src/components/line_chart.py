@@ -16,21 +16,21 @@ per_capita_cumulative_path = "data/co_emissions_per_capita_cumulative.csv"
 
 def render(app: Dash) -> html.Div:
     
-    data = pd.read_csv(per_capita_path)
-    data = data.set_index("Year")
+    # Initial figure setup, will update based on button clicks
+    initial_data = pd.read_csv(per_capita_path)
+    initial_data = initial_data.set_index("Year")
+    default_countries = ["United States", "Finland", "China"]
     
-    selected_countries = ["United States","Finland",  "China"]
-
-    filtered_data = data[selected_countries]
+    fig = px.line(
+        initial_data[default_countries],
+        x=initial_data.index,
+        y=default_countries,
+        title="CO2 emissions per capita",
+        labels={"value": "CO2 in tons", "variable": "Nations"}
+    )
     
-    fig = px.line(filtered_data, x=filtered_data.index, y=filtered_data.columns, title="CO2 emissions per capita",
-                  labels={"value": "CO2 in tons", "variable": "Nations"})
-    
-    # Update layout to move x-axis labels to the right
     fig.update_layout(
-        yaxis=dict(
-            side="right"  # Move the y-axis labels to the right side as well
-        )
+        yaxis=dict(side="right")
     )
 
     graph = html.Div(dcc.Graph(figure=fig), id=ids.LINE_CHART)
@@ -42,34 +42,40 @@ def render(app: Dash) -> html.Div:
             Input(ids.SELECT_TOTAL, "n_clicks"),
             Input(ids.SELECT_PER_CAPITA, "n_clicks"),
             Input(ids.SELECT_TOTAL_CUMULATIVE, "n_clicks"),
-            Input(ids.SELECT_PER_CAPITA_CUMULATIVE, "n_clicks")
+            Input(ids.SELECT_PER_CAPITA_CUMULATIVE, "n_clicks"),
+            Input(ids.COUNTRY_DROPDOWN, "value")  # Dropdown selection as an input
         ]
     )
-    def update_chart(n_total, n_per_capita, n_total_cumulative, n_per_capita_cumulative):
+    def update_chart(n_total, n_per_capita, n_total_cumulative, n_per_capita_cumulative, selected_countries):
         # Determine which button was clicked
         ctx = callback_context
         if not ctx.triggered:
             return dcc.Graph(figure=fig)  # No button clicked yet
 
-        button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+        # Default to per capita path if no button click
+        data_path = per_capita_path
+        title = "CO2 emissions per capita"
 
-        # Select path based on button clicked
+        button_id = ctx.triggered[0]["prop_id"].split(".")[0]
         if button_id == ids.SELECT_TOTAL:
             data_path = total_path
             title = "Total CO2 emissions"
-        elif button_id == ids.SELECT_PER_CAPITA:
-            data_path = per_capita_path
-            title = "CO2 emissions per capita"
         elif button_id == ids.SELECT_TOTAL_CUMULATIVE:
             data_path = total_cumulative_path
             title = "Total cumulative CO2 emissions"
         elif button_id == ids.SELECT_PER_CAPITA_CUMULATIVE:
             data_path = per_capita_cumulative_path
             title = "Per capita cumulative CO2 emissions"
-        
-        # Load the selected data
+
+        # Load data and filter by selected countries
         data = pd.read_csv(data_path)
         data = data.set_index("Year")
+        
+        # Check if selected countries exist in the data columns
+        selected_countries = [country for country in selected_countries if country in data.columns]
+        if not selected_countries:
+            selected_countries = default_countries  # Fallback to default if no valid selection
+
         filtered_data = data[selected_countries]
 
         # Update figure
