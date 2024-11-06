@@ -47,6 +47,12 @@ def render(app: Dash) -> html.Div:
         ]
     )
     def update_chart(n_total, n_per_capita, n_total_cumulative, n_per_capita_cumulative, selected_countries):
+        
+        # If no country is selected, display a message
+        if not selected_countries:
+            return html.Div("No country selected.", id=ids.LINE_CHART)
+
+        
         # Determine which button was clicked
         ctx = callback_context
         if not ctx.triggered:
@@ -71,10 +77,10 @@ def render(app: Dash) -> html.Div:
         data = pd.read_csv(data_path)
         data = data.set_index("Year")
         
-        # Check if selected countries exist in the data columns
+        # Filter only valid selected countries
         selected_countries = [country for country in selected_countries if country in data.columns]
         if not selected_countries:
-            selected_countries = default_countries  # Fallback to default if no valid selection
+            return html.Div("No valid country selected.", id=ids.LINE_CHART)
 
         filtered_data = data[selected_countries]
 
