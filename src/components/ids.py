@@ -1,1 +1,5 @@
 LINE_CHART = "line-chart"
+SELECT_TOTAL = "select_total"
+SELECT_PER_CAPITA = "select_per_capita"
+SELECT_TOTAL_CUMULATIVE = "select_total_cumulative"
+SELECT_PER_CAPITA_CUMULATIVE = "select_per_capita_cumulative"
