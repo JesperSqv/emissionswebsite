@@ -7,6 +7,8 @@ pd.options.plotting.backend = "plotly"
 
 from . import ids
 
+countries_path = "data/countries.csv"
+
 total_path = "data/co_emissions_total.csv"
 per_capita_path = "data/co_emissions_per_capita.csv"
 total_cumulative_path = "data/co_emissions_total_cumulative.csv"
