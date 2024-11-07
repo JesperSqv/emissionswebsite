@@ -9,16 +9,16 @@ from . import ids
 
 countries_path = "data/countries.csv"
 
-total_path = "data/co_emissions_total.csv"
-per_capita_path = "data/co_emissions_per_capita.csv"
-total_cumulative_path = "data/co_emissions_total_cumulative.csv"
-per_capita_cumulative_path = "data/co_emissions_per_capita_cumulative.csv"
+total_path = "data/co_emissions_total_map.csv"
+per_capita_path = "data/co_emissions_per_capita_map.csv"
+total_cumulative_path = "data/co_emissions_total_cumulative_map.csv"
+per_capita_cumulative_path = "data/co_emissions_per_capita_cumulative_map.csv"
 
 def render(app: Dash) -> html.Div:
     map = html.Div([
         html.H1("CO2 Emissions by Country"),
         # Div for displaying the choropleth map
-        html.Div(id='choropleth-map')
+        html.Div(id=ids.CHOROPLETH_MAP)
     ])
 
     # Callback to update the map based on button clicks
@@ -43,27 +43,35 @@ def render(app: Dash) -> html.Div:
         if button_id == ids.SELECT_TOTAL:
             data_path = total_path
             title = "Total CO2 emissions by Country"
+            column = "CO2 total"
         elif button_id == ids.SELECT_PER_CAPITA:
             data_path = per_capita_path
             title = "CO2 emissions per capita by Country"
+            column = "CO2 per capita"
         elif button_id == ids.SELECT_TOTAL_CUMULATIVE:
             data_path = total_cumulative_path
             title = "Total cumulative CO2 emissions by Country"
+            column = "CO2 total cumulative"
         elif button_id == ids.SELECT_PER_CAPITA_CUMULATIVE:
             data_path = per_capita_cumulative_path
             title = "Per capita cumulative CO2 emissions by Country"
+            column = "CO2 per capita cumulative"
         
         # Load the selected data
         data = pd.read_csv(data_path)
+
+        # Define the desired order with '1800' first
+        desired_year_order = ['1800'] + sorted([year for year in data['year'].unique() if year != '1800'])
         
         # Assuming the data has columns like "iso_alpha" for country codes and "emissions" for values
         fig = px.choropleth(
             data,
-            locations="iso_alpha",
-            color="emissions",  # Replace with the column name for emissions in your data
-            hover_name=data.columns,  # Replace with country name column if necessary
+            locations="Code",
+            color=column,  # Replace with the column name for emissions in your data
+            hover_name="country",  # Replace with country name column if necessary
             projection="natural earth",
-            animation_frame=data.index,
+            animation_frame="year",
+            category_orders={'year': desired_year_order},
             title=title
         )
         
