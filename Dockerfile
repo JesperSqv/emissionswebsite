@@ -14,10 +14,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app
 
 # Expose the port the app runs on
-EXPOSE 8050
+EXPOSE 8000
 
 # Define environment variables (optional, depending on your setup)
 ENV PYTHONPATH "${PYTHONPATH}:/app/src"
 
-# Run the application
-CMD ["python", "main.py"]
+# Run the application with gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "app:server"]
