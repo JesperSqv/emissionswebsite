@@ -8,7 +8,7 @@ app = Dash(__name__, external_stylesheets=[BOOTSTRAP])
 
 server = app.server
 
-app.title = "Emission data"
+app.title = "Historical and cumulative emissions compared"
 app.layout = create_layout(app)
 
 if __name__ == '__main__':
