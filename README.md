@@ -109,14 +109,6 @@ This project is a Dash-based web application for visualizing CO2 emissions data.
 
 ## Data Sources
 
-The cumulative CO2 emissions are calculated using the equation:
-
-$$\text{CO2 cumulative year } x = \sum_{y= \text{start year}}^{x} \text{CO2 year } y$$
-
-And for the cumulative CO2 per capita:
-
-$$\text{CO2 cumulative per capita year } x = \frac{\text{CO2 cumulative year } x} {\text{population year } x}$$
-
 The data used in this project comes from the following sources:
 
 - Hannah Ritchie, Max Roser, and Pablo Rosado (2022) - "Energy". Published online at OurWorldinData.org. Retrieved from: [https://ourworldindata.org/energy](https://ourworldindata.org/energy) [Online Resource]
@@ -125,7 +117,11 @@ The data used in this project comes from the following sources:
 
 The cumulative CO2 emissions are calculated using the equation:
 
-\[\text{CO2 cumulative year } x = \sum_{y= \text{start year}}^{x} \text{CO2 year } y\]
+$$\text{CO2 cumulative year } x = \sum_{y= \text{start year}}^{x} \text{CO2 year } y$$
+
+And for the cumulative CO2 per capita:
+
+$$\text{CO2 cumulative per capita year } x = \frac{\text{CO2 cumulative year } x} {\text{population year } x}$$
 
 The `data/` directory contains data for the plot and the map.
 
